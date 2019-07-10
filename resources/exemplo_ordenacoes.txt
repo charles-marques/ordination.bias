@@ -1,0 +1,22 @@
+
+ordenação em java/android:
+.sort(
+.compareTo(
+public int compare
+
+ordenação em java/kotlin:
+.sortBy{
+.sortBy {
+
+ordenação em java/scala:
+.sortBy(
+.sortWith(
+.sorted
+
+ordenação Sprint
+Sort.by(
+OrderBy
+
+ordenação em banco sql:
+'order by'
+

@@ -1,0 +1,4 @@
+Arquivo: source_projects/projet_415/Agenda-Banco-Web/bancoWeb/web/index.jspOrdenação: order by Linha:        String sql="select * from Pessoas where nome like '"+nome_pesquisa+"%' order by nome;";
+Arquivo: source_projects/projet_415/Agenda-Banco-Web/provaDione/web/gerenciaprof.jspOrdenação: order by Linha:        sql = "Select * from Professor order by nome;";
+Arquivo: source_projects/projet_415/Agenda-Banco-Web/provaDione/web/gerenciaprof.jspOrdenação: order by Linha:        sql = "Select * from Professor where nome like '"+filtro+"%' order by nome;"; 
+Arquivo: source_projects/projet_415/Agenda-Banco-Web/provaDione/web/docentes.jspOrdenação: order by Linha:        String sql = "Select nome,email,link_curriculo,titulacao from Professor order by nome";

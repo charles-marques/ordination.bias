@@ -1,0 +1,10 @@
+https://github.com/linuxsoares/encontrePessoas.git
+https://github.com/AlexandreVelloso/Introducao_JAVA.git
+https://github.com/adrianoribeiro/pessoa-api.git
+https://github.com/douglasjunior/CadastroPessoaServlet.git
+https://github.com/leonardo2707/Controle-Financeiro-Pessoal.git
+https://github.com/naweskil/cadastro_de_pessoas.git
+https://github.com/israelblock/DividirTotal.git
+https://github.com/Flaviohmm/Pessoa.git
+https://github.com/Lucianosgundafeira/pessoa.git
+https://github.com/MariaLuiza1996/Pessoa.git
