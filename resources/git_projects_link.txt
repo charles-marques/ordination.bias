@@ -665,3 +665,5 @@ https://github.com/guilhermeRangel/SistemaDeLeiloes.git
 https://github.com/joaoalmeidas/740-enquete.git
 https://github.com/igorMatsunaga/listaExercicio1.git
 https://github.com/YanAlves/Programa_FCMoreno.git
+https://github.com/danilomatheus/AdocaoLP.git
+https://github.com/US-CBP/GTAS.git
