@@ -9,7 +9,7 @@ print 'Inicio...'
 
 projects_urls = []
 
-nome_arquivo = '/home/suporte/eclipse-workspace/BaiasOrdenacao/resources/Links/z_links_geral.txt'
+nome_arquivo = '/home/suporte/eclipse-workspace/BaiasOrdenacao/resources/Links/z_links_geral_v2.txt'
 
 def read_files():
     print nome_arquivo
@@ -29,7 +29,7 @@ def carregar_projetos():
     print ''
     for url_projeto in projects_urls:
         print 'Clonando projeto: ' + url_projeto
-        index = projects_urls.index(url_projeto)
+        index = projects_urls.index(url_projeto) + 1400
         diretorio = '/home/suporte/eclipse-workspace/BaiasOrdenacao/source_projects/projeto_' + str(index)
         if not os.path.exists(diretorio):
             os.mkdir(diretorio)
