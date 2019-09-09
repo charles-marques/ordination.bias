@@ -3,6 +3,9 @@ ordenação em java/android:
 .sort(
 .compareTo(
 public int compare
+.comparing
+.order(
+.orderBy(
 
 ordenação em java/kotlin:
 .sortBy{
