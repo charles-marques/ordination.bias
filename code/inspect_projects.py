@@ -72,7 +72,7 @@ def listar(diretorio):
         else:
             verificar_arquivo(endereco)
 
-output_result = open('resources/resultados/links_com_ordenacoes_v1.txt','w')
+output_result = open('resources/resultados/links_com_ordenacoes_v2.txt','w')
 listar('source_projects')
 output_result.close()
 

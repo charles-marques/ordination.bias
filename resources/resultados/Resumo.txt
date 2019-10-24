@@ -1,0 +1,32 @@
+1. Primeiron caso: busca pelo termo 'pessoa'.
+    1.1. Busca por nome do repositório/projeto (03/julho):
+        Total de Projetos:  669
+        Que Lista Pessoas:   43
+        Ordena lista p/Nome: 19
+        Ordena Lista por ID:  1
+        Ação pós-listagem:    4
+
+    1.2. Busca por nome do arquivo(classe .java) ou conteúdo dela em (02/agosto):
+        Total de Projetos: 1852
+        Que Lista Pessoas:  146
+        Ordena lista p/Nome: 43
+        Ação pós-listagem:    8
+
+2. Segundo caso: consulta à lista de servidores do Estado do Ceará (15/outubro)
+    2.1. Dados dos Servidores do Estado do Ceará:
+        - Lista é ordenada pelo nome por padrão.
+    2.2. Baixamos os dados, que ficam disponível para download.
+    2.3. Total de linhas: 170.748
+    2.4. Construimos uma aplicação que aplica os mesmos filtros
+    2.5. Calculamos a frequência por gênero dos topk-10 e topk-40 e comparamos com a 
+
+Top10 M; Top10 F; Top40 M; Top40 F;
+ 100.0 ;    0.0 ;   92.5 ;    7.5 ;
+
+Problemas:
+1. Ao pesquisar o github permite baixar apenas os códigos das 100 primeiras páginas
+    - estou construíndo um crawler para mitigar esse limite.
+2. Não achei uma opção para baixar os conjunto de repositórios do git ou consultar nele todo.
+    - o nosso crawler poderia fazer esse análise já durante a navegação.
+3. Estamos buscando por querystring no lugar de construções específicas: ordenações
+    - as estruturas de ordenação são conhecidas e definidas pelas tecnologias envolvidas, poderiam ser um parametro da consulta.
