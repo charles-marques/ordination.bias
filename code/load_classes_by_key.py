@@ -10,6 +10,6 @@ def datasource():
         datasource.append(line.replace('\n',''))
     return datasource
 
-# dados = datasource()
+dados = datasource()
 # print len(dados)
 # print dados[:2]
