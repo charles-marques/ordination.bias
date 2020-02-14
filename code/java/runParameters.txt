@@ -1,4 +1,0 @@
-Loaded default properties at Tue Oct 22 15:37:12 BRT 2019
-PreCommitVerifier.threshold=7.0
-Serializer.name=Kryo
-AbstractNGramLM.debugProbs=false
