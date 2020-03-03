@@ -19,9 +19,12 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.expr.VariableDeclarationExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.type.VarType;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
-import database.Conexao;
 
 public class AppNavigator {
 	protected static final Character QUEBRA_LINHA = '\n';
@@ -74,6 +77,9 @@ public class AppNavigator {
 		// } catch (PSQLException e) {
 		// e.printStackTrace();
 		// }
+		if (resultado.parallelStream().anyMatch(
+				f -> f[0].equals(projeto) && f[1].equals(classe) && f[2].equals(bloco) && f[3].equals(statment)))
+			return;
 		resultado.add(new String[] { projeto, classe, statment });
 		return;
 	}
@@ -97,7 +103,7 @@ public class AppNavigator {
 		System.out.println("******************************************");
 		System.out.println(APP + projeto);
 		System.out.println(CLASSES_ENCONTRADAS);
-		selectedClassesList.forEach(System.out::println);
+		selectedClassesList.forEach(c -> System.out.println(c.getNome()));
 		System.out.println("******************************************");
 	}
 
@@ -128,8 +134,39 @@ public class AppNavigator {
 		return;
 	}
 
-	protected static void searchLists(String projeto) throws Exception {
+	protected static List<String> getClassFields(Classe classeSelecionada, List<FieldDeclaration> atributos) {
+		List<FieldDeclaration> atributosSelecionados = atributos.stream()
+				.filter(f -> f.getCommonType().toString().contains(List.class.getSimpleName())
+						&& f.getCommonType().toString().contains(classeSelecionada.getNome()))
+				.collect(Collectors.toList());
+		List<String> variaveis = new ArrayList<String>();
 
+		if (!atributosSelecionados.isEmpty()) {
+			for (FieldDeclaration fieldDeclaration : atributosSelecionados) {
+				variaveis.add(fieldDeclaration.getVariable(0).getNameAsString());
+			}
+		}
+		return variaveis;
+	}
+
+	protected static List<String> getMethodParameters(Classe classeSelecionada, MethodDeclaration methodDeclaration) {
+		List<Parameter> parametrosSelecionados = methodDeclaration.getParameters().stream()
+				.filter(f -> f.getTypeAsString().contains(List.class.getSimpleName())
+						&& f.getTypeAsString().contains(classeSelecionada.getNome()))
+				.collect(Collectors.toList());
+
+		List<String> parametros = new ArrayList<String>();
+		if (!parametrosSelecionados.isEmpty()) {
+			for (Parameter parameterDeclaration : parametrosSelecionados) {
+				List<? extends Parameter> corpoMetodo = methodDeclaration.getBody().get()
+						.findAll(parameterDeclaration.getClass());
+				parametros.add(parameterDeclaration.getNameAsString());
+			}
+		}
+		return parametros;
+	}
+
+	protected static void searchLists(String projeto) throws Exception {
 		// VERIFY: IS THERE IN CLASS ANY ATTRIBUTE WHICH IS LIST OF ONE IDENTIFIED
 		// CLASSES RESEARCHED?
 		for (String classPath : classesList) {
@@ -148,38 +185,18 @@ public class AppNavigator {
 					List<String> variaveis = new ArrayList<>();
 					List<String> parametros = new ArrayList<>();
 					// BUSCANDO FIELDS DOS TIPOS LIST<CLASSE PERSON, CLIENT, USER...>
-					List<FieldDeclaration> atributos = classe.get().getFields();
+//					List<FieldDeclaration> atributos = classe.get().getFields();
 					List<MethodDeclaration> metodos = classe.get().getMethods();
-					List<FieldDeclaration> atributosSelecionados;
+//					List<FieldDeclaration> atributosSelecionados;
 					List<Parameter> parametrosSelecionados;
 					for (Classe classeSelecionada : selectedClassesList) {
 						// Classes List fields - OK
-						atributosSelecionados = atributos.stream()
-								.filter(f -> f.getCommonType().toString().contains(List.class.getSimpleName())
-										&& f.getCommonType().toString().contains(classeSelecionada.getNome()))
-								.collect(Collectors.toList());
-						if (!atributosSelecionados.isEmpty()) {
-							for (FieldDeclaration fieldDeclaration : atributosSelecionados) {
-								variaveis.add(fieldDeclaration.getVariable(0).getNameAsString());
-							}
-						}
+						variaveis.addAll(getClassFields(classeSelecionada, classe.get().getFields()));
 
 						// Methods Lists Params and Variables
 						for (MethodDeclaration methodDeclaration : metodos) {
-//							visit(methodDeclaration, null);
 							// List Parameters
-							parametrosSelecionados = methodDeclaration.getParameters().stream()
-									.filter(f -> f.getTypeAsString().contains(List.class.getSimpleName())
-											&& f.getTypeAsString().contains(classeSelecionada.getNome()))
-									.collect(Collectors.toList());
-
-							if (!parametrosSelecionados.isEmpty()) {
-								for (Parameter parameterDeclaration : parametrosSelecionados) {
-									List<? extends Parameter> corpoMetodo = methodDeclaration.getBody().get()
-											.findAll(parameterDeclaration.getClass());
-									parametros.add(parameterDeclaration.getNameAsString());
-								}
-							}
+							parametros.addAll(getMethodParameters(classeSelecionada, methodDeclaration));
 						}
 						// Method List Variables sorted
 					}
@@ -238,43 +255,20 @@ public class AppNavigator {
 		return;
 	}
 
-	protected static void visit(MethodDeclaration methodDeclaration, Object arg) {
-
-//        if(!functionParsing)
-//            return;
-		// TODO: check if this var was declared above it, as a local var to the func. if
-		// yes, return
-//		ArrayList<Integer> setOfLineNum;
-		System.out.println(methodDeclaration.getBegin().get().column + " NameExpr " + methodDeclaration.getName());
-//        System.out.println(n.getBeginLine()+" NameExpr " + n.getName());
-
-//		if (!variableList.contains(n.getName()) || n.getName().length() == 0)
-//			return;
-//		if (!variableLineNumMap.containsKey(n.getName())) {
-//			setOfLineNum = new ArrayList<Integer>();
-//			setOfLineNum.add(n.getBeginLine());
-//			variableLineNumMap.put(n.getName(), setOfLineNum);
-//		} else {
-//			setOfLineNum = variableLineNumMap.get(n.getName());
-//			setOfLineNum.add(n.getBeginLine());
-//			variableLineNumMap.put(n.getName(), setOfLineNum);
-//		}
-	}
-
 	public static void main(String[] args) {
 //		repositoryPath = "/home/suporte/Documentos/java_projects/";
-		repositoryPath = "/home/suporte/Workspace/BaiasOrdenacao/code/java/codemining/src/main/java/repository";
+		repositoryPath = "/home/suporte/Workspace/BaiasOrdenacao/codemining/src/main/java/repository";
 		File dirStart = new File(repositoryPath);
 		String[] diretorios = dirStart.list();
 		List<String> excecao = Arrays.asList("DPJ", "openjdk-fontfix", "RawClient", "ceylon-compiler",
 				"eclipse.jdt.core", "openjdk7-langtools", "groovy-eclipse");
-		int i = 0;
+//		int i = 0;
 		for (int k = 0; k < diretorios.length; k++) {
 //		for (String projeto : diretorios) {
 			try {
 				projeto = diretorios[k];
-				i = i + 1;
-				System.out.println(APP + i);
+//				i = i + 1;
+//				System.out.println(APP + i);
 				if (excecao.parallelStream().anyMatch(f -> projeto.contains(f)))
 					continue;
 				// config variables
@@ -285,15 +279,15 @@ public class AppNavigator {
 					continue;
 				printFoundClasses(projeto);
 				searchLists(projeto);
-				if (i > 1000)
-					break;
+//				if (i > 1000)
+//					break;
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
 			}
 		}
-		System.out.println(diretorios.length);
-		System.out.println("Projetos: ");
+//		System.out.println(diretorios.length);
+		System.out.println("Ordenações encontradas em: ");
 		System.out.println(resultado.size());
 		resultado.sort(new Comparator<String[]>() {
 
@@ -307,4 +301,35 @@ public class AppNavigator {
 		});
 		System.out.println(FIM);
 	}
+}
+
+class MethodVisitor extends VoidVisitorAdapter<Void> {
+
+	@Override
+	public void visit(BlockStmt n, Void arg) {
+		System.out.println("MethodVisitor.visit()");
+		System.out.println(n.isBlockStmt());
+		super.visit(n, arg);
+	}
+
+	@Override
+	public void visit(VariableDeclarator n, Void arg) {
+		System.out.println("MethodVisitor.visit()");
+		System.out.println(n.getNameAsString());
+		super.visit(n, arg);
+	}
+
+	@Override
+	public void visit(VarType n, Void arg) {
+		System.out.println("MethodVisitor.visit()");
+		System.out.println(n.asString());
+		super.visit(n, arg);
+	}
+
+	@Override
+	public void visit(VariableDeclarationExpr n, Void arg) {
+		System.out.println(n.asStringLiteralExpr());
+		super.visit(n, arg);
+	}
+
 }
