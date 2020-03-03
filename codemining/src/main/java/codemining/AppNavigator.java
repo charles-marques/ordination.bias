@@ -25,6 +25,8 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.type.VarType;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
+import database.Conexao;
+
 
 public class AppNavigator {
 	protected static final Character QUEBRA_LINHA = '\n';
