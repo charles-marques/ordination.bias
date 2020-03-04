@@ -21,8 +21,6 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
 
-import database.Conexao;
-
 
 public class AppNavigator {
 	protected static final Character QUEBRA_LINHA = '\n';
@@ -60,23 +58,12 @@ public class AppNavigator {
 	protected static CompilationUnit compilationUnit;
 	protected static File node;
 	protected static String tipo;
-
-	private static Conexao c = new Conexao("localhost", "5432", "baias", "postgres", "jkQm2cmp*");
 	private static String projeto;
 	protected static List<String[]> resultado = new ArrayList<String[]>();
 
 	protected static void addResultado(String projeto, String classe, String bloco, String statment) throws Exception {
-		// try {
-		// c.conect();
-		// c.insert("insert into public.dados(projeto, classe, statement) " + "values('"
-		// + projeto + "','" + classe
-		// + "','" + statment + "');");
-		// c.disconect();
-		// } catch (PSQLException e) {
-		// e.printStackTrace();
-		// }
 		if (resultado.parallelStream().anyMatch(
-				f -> f[0].equals(projeto) && f[1].equals(classe) && f[2].equals(bloco) && f[3].equals(statment)))
+				f -> f[0].equals(projeto) && f[1].equals(classe) && f[2].equals(bloco)))
 			return;
 		resultado.add(new String[] { projeto, classe, statment });
 		return;
@@ -183,9 +170,7 @@ public class AppNavigator {
 					List<String> variaveis = new ArrayList<>();
 					List<String> parametros = new ArrayList<>();
 					// BUSCANDO FIELDS DOS TIPOS LIST<CLASSE PERSON, CLIENT, USER...>
-//					List<FieldDeclaration> atributos = classe.get().getFields();
 					List<MethodDeclaration> metodos = classe.get().getMethods();
-//					List<FieldDeclaration> atributosSelecionados;
 					List<Parameter> parametrosSelecionados;
 					for (Classe classeSelecionada : selectedClassesList) {
 						// Classes List fields - OK
@@ -236,6 +221,7 @@ public class AppNavigator {
 									n -> sortingTerms.stream().anyMatch(s -> n.toString().contains(s))
 											&& variaveis.stream().anyMatch(v -> n.toString().contains(v)))
 									.collect(Collectors.toList());
+//							addResultado(projeto, node.getName(), blockStmt.toString());
 							for (Node statment : blockNodes) {
 								addResultado(projeto, node.getName(), blockStmt.toString(), statment.toString());
 							}
@@ -284,7 +270,6 @@ public class AppNavigator {
 			} finally {
 			}
 		}
-//		System.out.println(diretorios.length);
 		System.out.println("Ordenações encontradas em: ");
 		System.out.println(resultado.size());
 		resultado.sort(new Comparator<String[]>() {
