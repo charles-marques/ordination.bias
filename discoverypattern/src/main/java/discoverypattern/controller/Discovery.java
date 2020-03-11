@@ -1,4 +1,4 @@
-package codemining;
+package discoverypattern.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,101 +21,29 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
 
-
-public class AppNavigator {
-	protected static final Character QUEBRA_LINHA = '\n';
-	protected static final CharSequence VAZIO = "";
-	protected static final String VIRGULA = ",";
-	protected static final String APP = "APP: ";
-	protected static final String BARRA = "/";
-	protected static final String BUSCANDO_CLASSES = "Buscando Classes...";
-	protected static final String CLASSES_ENCONTRADAS = "Classes Encontradas:";
-	protected static final String CLASSE = "Classe: ";
-	protected static final String CURVA = "+";
-	protected static final String ESPACO = " ";
-	protected static final String FIM = "Fim";
-	protected static final String JAVA = ".java";
-	protected static final String LINHA_HORIZONTAL = "--------------------------------------------------------------------";
-	protected static final String LATERAL = "|";
-	protected static final String LIST = "List";
-	protected static final String LISTAS_ENCONTRADAS = "Listas Encontradas:";
-	protected static final String METODO = "Método: ";
-	protected static final String TIPO = "Tipo: ";
-	protected static final String VARIAVEL = "Variável: ";
-	protected static List<String> nomesProcurados = Arrays.asList("person", "employer", "employee", "customer",
-			"client", "user");
-	protected static List<String> sortingTerms = Arrays.asList("sort(", "compareTo(", "compare(", "order(", "orderBy",
-			"sortBy", "order by");
-	protected static String repositoryPath = "/home/suporte/Documentos/java_projects/101repo";
-	protected static String code;
-	protected static String st;
+public class Discovery {
+	private static final String FIM = "Fim";
+	private static final String JAVA = ".java";
+	private static final String LIST = "List";
+	private static final Character QUEBRA_LINHA = '\n';
+	private static final CharSequence VAZIO = "";
 
 	protected static List<String> classesList = new ArrayList<String>();
-	protected static List<Classe> selectedClassesList = new ArrayList<Classe>();
-
-	// Config:
-	protected static BufferedReader br;
-	protected static CompilationUnit compilationUnit;
-	protected static File node;
-	protected static String tipo;
-	private static String projeto;
 	protected static List<String[]> resultado = new ArrayList<String[]>();
+	protected static CompilationUnit compilationUnit;
+	protected static BufferedReader br;
+	protected static String code;
+	protected static File node;
+	protected static String st;
+
+	protected static List<String> sortingTerms = Arrays.asList("sort(", "compareTo(", "compare(", "order(", "orderBy", "sortBy", "order by");
+	protected static List<Classe> selectedClassesList = new ArrayList<Classe>();
 
 	protected static void addResultado(String projeto, String classe, String bloco, String statment) throws Exception {
 		if (resultado.parallelStream().anyMatch(
 				f -> f[0].equals(projeto) && f[1].equals(classe) && f[2].equals(bloco)))
 			return;
 		resultado.add(new String[] { projeto, classe, statment });
-		return;
-	}
-
-	private static void addClass(String absolutePath) {
-		if (classesList.stream().parallel().anyMatch(f -> f.contains(absolutePath)))
-			return;
-		classesList.add(absolutePath);
-	}
-
-	private static void addSelectedClass(String className, String codigo) {
-		if (selectedClassesList.stream().parallel()
-				.anyMatch(f -> f.getNome().contains(className.replace(JAVA, VAZIO)) && f.getCodigo().equals(codigo)))
-			return;
-		selectedClassesList.add(new Classe(projeto, className, codigo));
-	}
-
-	protected static void printFoundClasses(String projeto) {
-		if (selectedClassesList.isEmpty())
-			return;
-		System.out.println("******************************************");
-		System.out.println(APP + projeto);
-		System.out.println(CLASSES_ENCONTRADAS);
-		selectedClassesList.forEach(c -> System.out.println(c.getNome()));
-		System.out.println("******************************************");
-	}
-
-	public static void searchClasses(File node) throws Exception {
-		// VERIFY: IS CLASS NAMED WITH ONE OF CLASSES NAMES?
-		if (node.isFile() && node.getPath().endsWith(JAVA)) {
-			String[] path = node.getAbsolutePath().split("/");
-			String className = path[path.length - 1].replace(JAVA, VAZIO);
-			addClass(node.getAbsolutePath());
-			if (nomesProcurados.stream().parallel().anyMatch(className.toLowerCase()::contains)) {
-				code = new String();
-				br = new BufferedReader(new FileReader(node));
-				while ((st = br.readLine()) != null) {
-					code = code + st + QUEBRA_LINHA;
-				}
-				br.close();
-				addSelectedClass(className, code);
-			}
-			return;
-		} else if (node.isDirectory()) {
-			String[] subNote = node.list();
-			for (String filename : subNote) {
-				searchClasses(new File(node, filename));
-			}
-		} else {
-			// NÃO É ARQUIVO '.JAVA'
-		}
 		return;
 	}
 
@@ -143,15 +71,15 @@ public class AppNavigator {
 		List<String> parametros = new ArrayList<String>();
 		if (!parametrosSelecionados.isEmpty()) {
 			for (Parameter parameterDeclaration : parametrosSelecionados) {
-				List<? extends Parameter> corpoMetodo = methodDeclaration.getBody().get()
-						.findAll(parameterDeclaration.getClass());
+//				List<? extends Parameter> corpoMetodo = methodDeclaration.getBody().get()
+//						.findAll(parameterDeclaration.getClass());
 				parametros.add(parameterDeclaration.getNameAsString());
 			}
 		}
 		return parametros;
 	}
 
-	protected static void searchLists(String projeto) throws Exception {
+	private static void searchLists(String projeto) throws Exception {
 		// VERIFY: IS THERE IN CLASS ANY ATTRIBUTE WHICH IS LIST OF ONE IDENTIFIED
 		// CLASSES RESEARCHED?
 		for (String classPath : classesList) {
@@ -240,35 +168,15 @@ public class AppNavigator {
 	}
 
 	public static void main(String[] args) {
-		repositoryPath = "/home/suporte/Documentos/java_projects/";
-//		repositoryPath = "/home/suporte/Workspace/BaiasOrdenacao/codemining/src/main/java/repository";
-		File dirStart = new File(repositoryPath);
-		String[] diretorios = dirStart.list();
-		List<String> excecao = Arrays.asList("DPJ", "openjdk-fontfix", "RawClient", "ceylon-compiler",
-				"eclipse.jdt.core", "openjdk7-langtools", "groovy-eclipse");
-		int i = 0;
-		for (int k = 0; k < diretorios.length; k++) {
-//		for (String projeto : diretorios) {
-			try {
-				projeto = diretorios[k];
-				i = i + 1;
-				if (excecao.parallelStream().anyMatch(f -> projeto.contains(f)))
-					continue;
-				// config variables
-				classesList = new ArrayList<>();
-				selectedClassesList = new ArrayList<>();
-				searchClasses(new File(repositoryPath, projeto));
-				if (selectedClassesList.isEmpty())
-					continue;
-				System.out.println(APP + i);
-				printFoundClasses(projeto);
-//				searchLists(projeto);
-				if (i > 1000)
-					break;
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-			}
+		if (args == null || args.length == 0) {
+			System.out.println("Nome do Projeto não informado");
+			return;
+		}
+		try {
+			searchLists(args[0]);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
 		}
 		System.out.println("Ordenações encontradas em: ");
 		System.out.println(resultado.size());
