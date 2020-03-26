@@ -1,4 +1,4 @@
-package repository.projeto;
+package code.example.source;
 
 public class User implements Comparable<User> {
 	private String nick;

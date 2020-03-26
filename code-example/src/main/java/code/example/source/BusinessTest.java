@@ -1,4 +1,4 @@
-package repository.projeto;
+package code.example.source;
 
 import java.util.Comparator;
 import java.util.List;

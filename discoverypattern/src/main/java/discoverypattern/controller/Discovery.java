@@ -3,6 +3,7 @@ package discoverypattern.controller;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -20,8 +21,16 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
+import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.PrimitiveType;
+import com.github.javaparser.ast.type.ReferenceType;
+import com.github.javaparser.ast.type.Type;
 
 public class Discovery {
+	private static final String CHAVE_FECHANDO = ">";
+	private static final String LIST_TYPE = "List<";
+	private static final String ARRAYLIST_TYPE = "ArrayList<";
+	private static final String LINKEDLIST_TYPE = "LinkedList<";
 	private static final String FIM = "Fim";
 	private static final String JAVA = ".java";
 	private static final String LIST = "List";
@@ -47,11 +56,17 @@ public class Discovery {
 		return;
 	}
 
+	/**
+	 * @param classeSelecionada
+	 * @param atributos
+	 * @return {@link List}<{@link String}> de variáveis da classe
+	 */
 	protected static List<String> getClassFields(Classe classeSelecionada, List<FieldDeclaration> atributos) {
-		List<FieldDeclaration> atributosSelecionados = atributos.stream()
-				.filter(f -> f.getCommonType().toString().contains(List.class.getSimpleName())
-						&& f.getCommonType().toString().contains(classeSelecionada.getNome()))
-				.collect(Collectors.toList());
+		List<FieldDeclaration> atributosSelecionados = atributos.stream().filter(
+				f -> getListTypes(classeSelecionada).stream().anyMatch(
+						cs -> f.getElementType().toClassOrInterfaceType().get().asString().equals(cs)
+				)
+			).collect(Collectors.toList());
 		List<String> variaveis = new ArrayList<String>();
 
 		if (!atributosSelecionados.isEmpty()) {
@@ -65,18 +80,25 @@ public class Discovery {
 	protected static List<String> getMethodParameters(Classe classeSelecionada, MethodDeclaration methodDeclaration) {
 		List<Parameter> parametrosSelecionados = methodDeclaration.getParameters().stream()
 				.filter(f -> f.getTypeAsString().contains(List.class.getSimpleName())
+						&& f.getClass().isInstance(List.class)
 						&& f.getTypeAsString().contains(classeSelecionada.getNome()))
 				.collect(Collectors.toList());
 
 		List<String> parametros = new ArrayList<String>();
 		if (!parametrosSelecionados.isEmpty()) {
 			for (Parameter parameterDeclaration : parametrosSelecionados) {
-//				List<? extends Parameter> corpoMetodo = methodDeclaration.getBody().get()
-//						.findAll(parameterDeclaration.getClass());
 				parametros.add(parameterDeclaration.getNameAsString());
 			}
 		}
 		return parametros;
+	}
+
+	private static List<String> getListTypes(Classe classeSelecionada) {
+		List<String> tipos = new ArrayList<String>();
+		tipos.add(LIST_TYPE + classeSelecionada.getNome() + CHAVE_FECHANDO);
+		tipos.add(ARRAYLIST_TYPE + classeSelecionada.getNome() + CHAVE_FECHANDO);
+		tipos.add(LINKEDLIST_TYPE + classeSelecionada.getNome() + CHAVE_FECHANDO);
+		return tipos;
 	}
 
 	private static void searchLists(String projeto) throws Exception {
@@ -94,23 +116,29 @@ public class Discovery {
 				compilationUnit = StaticJavaParser.parse(code);
 				Optional<ClassOrInterfaceDeclaration> classe = compilationUnit
 						.getClassByName(node.getName().replace(JAVA, VAZIO));
-				if (classe.isPresent()) {
-					List<String> variaveis = new ArrayList<>();
-					List<String> parametros = new ArrayList<>();
-					// BUSCANDO FIELDS DOS TIPOS LIST<CLASSE PERSON, CLIENT, USER...>
-					List<MethodDeclaration> metodos = classe.get().getMethods();
-					List<Parameter> parametrosSelecionados;
-					for (Classe classeSelecionada : selectedClassesList) {
-						// Classes List fields - OK
-						variaveis.addAll(getClassFields(classeSelecionada, classe.get().getFields()));
 
-						// Methods Lists Params and Variables
+				// XXX CONFIGURAÇÃO
+				List<String> variaveis = new ArrayList<>();
+				List<String> parametros = new ArrayList<>();
+				List<MethodDeclaration> metodos = classe.get().getMethods();
+				List<Parameter> parametrosSelecionados;
+
+				if (classe.isPresent()) {
+
+					// XXX BUSCANDO FIELDS DA CLASSE DO TIPOS LIST<PERSON, CLIENT, USER...>
+					selectedClassesList.forEach(classeSelecionada -> {
+						variaveis.addAll(getClassFields(classeSelecionada, classe.get().getFields()));
+					});
+
+					// Methods Lists Params and Variables
+					selectedClassesList.forEach(classeSelecionada -> {
 						for (MethodDeclaration methodDeclaration : metodos) {
 							// List Parameters
 							parametros.addAll(getMethodParameters(classeSelecionada, methodDeclaration));
+							variaveis.addAll(getMethodParameters(classeSelecionada, methodDeclaration));
 						}
-						// Method List Variables sorted
-					}
+					});
+					// Method List Variables sorted
 
 					// INSPECIONAR PARAMETROS DECLADAS NO ESCOPO DO MÉTODO
 
@@ -181,7 +209,6 @@ public class Discovery {
 		System.out.println("Ordenações encontradas em: ");
 		System.out.println(resultado.size());
 		resultado.sort(new Comparator<String[]>() {
-
 			@Override
 			public int compare(String[] o1, String[] o2) {
 				return (o1[0] + o1[1] + o1[2]).toString().compareTo((o2[0] + o2[1] + o2[2]).toString());
