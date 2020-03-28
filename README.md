@@ -1,4 +1,4 @@
 # ordination.bias
 ## Codemining Bias
-This project it's a enforcement to discovery bias pattern in programming, mainly on listing people.
-To look for bias it's necessary look after certains characteristics over code.
+This project is an application for discovering bias patterns in programming, mainly in the list of people. <br/>
+To look for bias it is necessary to take care of certain characteristics about the code.
