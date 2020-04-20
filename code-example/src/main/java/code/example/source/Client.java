@@ -1,11 +1,10 @@
 package code.example.source;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Client {
 	protected String nome = "text";
-	protected List<String> contato = new ArrayList<String>(0);
+	protected List<String> contato;
 //	protected List contato;
 
 	public String getNome() {
