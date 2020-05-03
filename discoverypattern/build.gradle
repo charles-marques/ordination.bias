@@ -33,6 +33,15 @@ dependencies {
 	compile group: 'com.github.javaparser', name: 'javaparser-symbol-solver-core', version: '3.15.14'
 	// implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.15.4'
 
+	// https://mvnrepository.com/artifact/com.github.javaparser/java-symbol-solver-core
+	compile group: 'com.github.javaparser', name: 'java-symbol-solver-core', version: '0.6.3'
+
+	// https://mvnrepository.com/artifact/fr.inria.gforge.spoon/spoon-core
+	compile group: 'fr.inria.gforge.spoon', name: 'spoon-core', version: '8.1.0'
+
+	// https://mvnrepository.com/artifact/org.eclipse.jdt/org.eclipse.jdt.core
+	compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.21.0'
+
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }

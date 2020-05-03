@@ -3,7 +3,6 @@ package discoverypattern.controller;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -21,10 +20,6 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.stmt.BlockStmt;
-import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.ast.type.PrimitiveType;
-import com.github.javaparser.ast.type.ReferenceType;
-import com.github.javaparser.ast.type.Type;
 
 public class Discovery {
 	private static final String CHAVE_FECHANDO = ">";
@@ -208,15 +203,19 @@ public class Discovery {
 		}
 		System.out.println("Ordenações encontradas em: ");
 		System.out.println(resultado.size());
+		sortResultado();
+		resultado.forEach(o1 -> {
+			System.out.println(o1[0] + ", " + o1[1] + ", " + o1[2]);
+		});
+		System.out.println(FIM);
+	}
+
+	private static void sortResultado() {
 		resultado.sort(new Comparator<String[]>() {
 			@Override
 			public int compare(String[] o1, String[] o2) {
 				return (o1[0] + o1[1] + o1[2]).toString().compareTo((o2[0] + o2[1] + o2[2]).toString());
 			}
 		});
-		resultado.forEach(o1 -> {
-			System.out.println(o1[0] + ", " + o1[1] + ", " + o1[2]);
-		});
-		System.out.println(FIM);
 	}
 }

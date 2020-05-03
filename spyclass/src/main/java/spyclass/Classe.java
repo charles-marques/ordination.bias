@@ -10,7 +10,7 @@ public class Classe {
 	}
 
 	public Classe(String projeto, String nome, String codigo) {
-		super();
+		this();
 		this.projeto = projeto;
 		this.nome = nome;
 		this.codigo = codigo;
