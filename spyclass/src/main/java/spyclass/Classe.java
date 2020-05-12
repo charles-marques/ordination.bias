@@ -1,43 +1,67 @@
 package spyclass;
 
 public class Classe {
-	private String projeto;
-	private String nome;
-	private String codigo;
+	private static final String COLUNM_SEPARATOR = "'; '";
+	private static final String ASPAS_SIMPLES = "'";
+	private String className;
+	private String classPath;
+	private Boolean classRepresentative;
 
-	public Classe() {
-		super();
+	public Classe(String className, String classPath, Boolean classRepresentative) {
+		this.className = className;
+		this.classPath = classPath;
+		this.classRepresentative = classRepresentative;
 	}
 
-	public Classe(String projeto, String nome, String codigo) {
-		this();
-		this.projeto = projeto;
-		this.nome = nome;
-		this.codigo = codigo;
+	public String getClassName() {
+		return className;
 	}
 
-	public String getProjeto() {
-		return projeto;
+	public void setClassName(String className) {
+		this.className = className;
 	}
 
-	public void setProjeto(String projeto) {
-		this.projeto = projeto;
+	public String getClassPath() {
+		return classPath;
 	}
 
-	public String getNome() {
-		return nome;
+	public void setClassPath(String classPath) {
+		this.classPath = classPath;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public Boolean getClassRepresentative() {
+		return classRepresentative;
 	}
 
-	public String getCodigo() {
-		return codigo;
+	public void setClassRepresentative(Boolean classRepresentative) {
+		this.classRepresentative = classRepresentative;
 	}
 
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	@Override
+	public String toString() {
+		return ASPAS_SIMPLES + className + COLUNM_SEPARATOR + classPath + COLUNM_SEPARATOR
+				+ (classRepresentative ? "Sim" : "Não") + ASPAS_SIMPLES;
 	}
 
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 31 * hash + className.hashCode();
+		hash = 31 * hash + (classPath == null ? 0 : classPath.hashCode());
+		hash = 31 * hash + (classRepresentative == null ? 0 : classRepresentative.hashCode());
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (this.getClass() != obj.getClass())
+			return false;
+		Classe classe = (Classe) obj;
+		return className.equals(classe.className)
+				&& (classPath.equals(classe.classPath) && classRepresentative.equals(classe.classRepresentative));
+	}
 }

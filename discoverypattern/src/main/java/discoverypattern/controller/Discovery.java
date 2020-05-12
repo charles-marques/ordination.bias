@@ -40,12 +40,12 @@ public class Discovery {
 	protected static File node;
 	protected static String st;
 
-	protected static List<String> sortingTerms = Arrays.asList("sort(", "compareTo(", "compare(", "order(", "orderBy", "sortBy", "order by");
+	protected static List<String> sortingTerms = Arrays.asList("sort(", "compareTo(", "compare(", "order(", "orderBy",
+			"sortBy", "order by");
 	protected static List<Classe> selectedClassesList = new ArrayList<Classe>();
 
 	protected static void addResultado(String projeto, String classe, String bloco, String statment) throws Exception {
-		if (resultado.parallelStream().anyMatch(
-				f -> f[0].equals(projeto) && f[1].equals(classe) && f[2].equals(bloco)))
+		if (resultado.parallelStream().anyMatch(f -> f[0].equals(projeto) && f[1].equals(classe) && f[2].equals(bloco)))
 			return;
 		resultado.add(new String[] { projeto, classe, statment });
 		return;
@@ -57,11 +57,10 @@ public class Discovery {
 	 * @return {@link List}<{@link String}> de variáveis da classe
 	 */
 	protected static List<String> getClassFields(Classe classeSelecionada, List<FieldDeclaration> atributos) {
-		List<FieldDeclaration> atributosSelecionados = atributos.stream().filter(
-				f -> getListTypes(classeSelecionada).stream().anyMatch(
-						cs -> f.getElementType().toClassOrInterfaceType().get().asString().equals(cs)
-				)
-			).collect(Collectors.toList());
+		List<FieldDeclaration> atributosSelecionados = atributos.stream()
+				.filter(f -> getListTypes(classeSelecionada).stream()
+						.anyMatch(cs -> f.getElementType().toClassOrInterfaceType().get().asString().equals(cs)))
+				.collect(Collectors.toList());
 		List<String> variaveis = new ArrayList<String>();
 
 		if (!atributosSelecionados.isEmpty()) {
@@ -97,8 +96,7 @@ public class Discovery {
 	}
 
 	private static void searchLists(String projeto) throws Exception {
-		// VERIFY: IS THERE IN CLASS ANY ATTRIBUTE WHICH IS LIST OF ONE IDENTIFIED
-		// CLASSES RESEARCHED?
+		// VERIFY: IS THERE ON CLASS ANY ATTRIBUTE WHICH IS LIST OF ONE IDENTIFIED RESEARCHED CLASSES?
 		for (String classPath : classesList) {
 			try {
 				node = new File(classPath);
@@ -190,6 +188,15 @@ public class Discovery {
 		return;
 	}
 
+	private static void sortResultado() {
+		resultado.sort(new Comparator<String[]>() {
+			@Override
+			public int compare(String[] o1, String[] o2) {
+				return (o1[0] + o1[1] + o1[2]).toString().compareTo((o2[0] + o2[1] + o2[2]).toString());
+			}
+		});
+	}
+
 	public static void main(String[] args) {
 		if (args == null || args.length == 0) {
 			System.out.println("Nome do Projeto não informado");
@@ -208,14 +215,5 @@ public class Discovery {
 			System.out.println(o1[0] + ", " + o1[1] + ", " + o1[2]);
 		});
 		System.out.println(FIM);
-	}
-
-	private static void sortResultado() {
-		resultado.sort(new Comparator<String[]>() {
-			@Override
-			public int compare(String[] o1, String[] o2) {
-				return (o1[0] + o1[1] + o1[2]).toString().compareTo((o2[0] + o2[1] + o2[2]).toString());
-			}
-		});
 	}
 }

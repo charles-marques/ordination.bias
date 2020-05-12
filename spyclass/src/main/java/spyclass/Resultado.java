@@ -9,75 +9,34 @@ import com.google.gson.Gson;
 
 public class Resultado {
 
-	private static final String APP = "APP: ";
-	private static final String CLASSES_ENCONTRADAS = "Classes Encontradas:";
-	private static final String CLASSES_NAO_ENCONTRADAS = "Classes não encontradas";
-	private static final String JAVA = ".java";
-	private static final CharSequence VAZIO = "";
+	private static final String FILE_NAME = "classes.csv";
+	private static final String FILE_COLUNMS = "class_name; class_path; class_representative;\n";
+	protected static List<Classe> classesList = new ArrayList<Classe>();
 
-	protected static List<String> classesList = new ArrayList<String>();
-	protected static List<Classe> selectedClassesList = new ArrayList<Classe>();
-
-	public static List<String> getClassesList() {
+	public static List<Classe> getClassesList() {
 		return classesList;
 	}
 
-	public static void setClassesList(List<String> classesList) {
+	public static void setClassesList(List<Classe> classesList) {
 		Resultado.classesList = classesList;
 	}
 
-	public static List<Classe> getSelectedClassesList() {
-		return selectedClassesList;
-	}
-
-	public static void setSelectedClassesList(List<Classe> selectedClassesList) {
-		Resultado.selectedClassesList = selectedClassesList;
-	}
-
-	public void addClass(String absolutePath) {
-		if (classesList.stream().parallel().anyMatch(f -> f.contains(absolutePath)))
+	public void addClass(Classe classe) {
+		if (classesList.stream().parallel().anyMatch(f -> f.equals(classe)))
 			return;
-		classesList.add(absolutePath);
-	}
-
-	public void addSelectedClass(String projeto, String className, String codigo) {
-		if (selectedClassesList.stream().parallel()
-				.anyMatch(f -> f.getNome().contains(className.replace(JAVA, VAZIO)) && f.getCodigo().equals(codigo)))
-			return;
-		selectedClassesList.add(new Classe(projeto, className, codigo));
-	}
-
-	public void printFoundClasses(String projeto) {
-		System.out.println("******************************************");
-		System.out.println(APP + projeto);
-		if (selectedClassesList.isEmpty()) {
-			System.out.println(CLASSES_NAO_ENCONTRADAS);
-		} else {
-			System.out.println(CLASSES_ENCONTRADAS);
-			selectedClassesList.forEach(c -> System.out.println(c.getNome()));
-		}
-		System.out.println("******************************************");
+		classesList.add(classe);
 	}
 
 	public void writeCsvFiles() {
 		PrintWriter writerClasses;
-		PrintWriter writerSelected;
 		try {
-			writerClasses = new PrintWriter("classes.csv");
+			writerClasses = new PrintWriter(FILE_NAME);
+			writerClasses.write(FILE_COLUNMS);
 			classesList.forEach(c -> writerClasses.write(c + System.lineSeparator()));
 			writerClasses.close();
-			writerSelected = new PrintWriter("selected_classes.csv");
-			selectedClassesList.forEach(s -> writerSelected.write(s.getNome() + System.lineSeparator()));
-			writerSelected.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
 	}
 
 	@Override
@@ -96,7 +55,7 @@ public class Resultado {
 		PrintWriter writer = null;
 		Gson gson = new Gson();
 		try {
-			String json = gson.toJson(this.getClassesList());
+			String json = gson.toJson(this);
 			writer = new PrintWriter("resultado.json");
 			writer.write(json);
 		} catch (FileNotFoundException e) {
