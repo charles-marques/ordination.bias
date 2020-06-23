@@ -19,15 +19,11 @@ import com.github.javaparser.ast.body.FieldDeclaration;
 import spyclass.Classe;
 import spyclass.Resultado;
 
-public class SpyClass {
+public class SpyClassStatistic {
 
-	private static final String SRC_MAIN_JAVA = "/src/main/java/";
-	private static final String SRC_TEST_JAVA = "/src/test/java/";
-	private static final String PONTO = ".";
-	private static final String SRC = "src";
 	private final Character QUEBRA_LINHA = '\n';
-	private final static String JAVA = ".java";
-	private final static CharSequence VAZIO = "";
+	private final String JAVA = ".java";
+	private final CharSequence VAZIO = "";
 	private final List<String> classesProcuradas = Arrays.asList("person", "employee", "customer", "client", "user",
 			"pessoa", "empregado", "cliente", "usuario");
 	private final List<String> nomesProdurados = Arrays.asList("name", "nome", "nick", "username", "firstName",
@@ -127,24 +123,6 @@ public class SpyClass {
 		}
 	}
 
-	private static String projectPath(Classe c) {
-		List<String> arrayPath = Arrays.asList(c.getClassPath().split(File.separator));
-		int indice = 0;
-		for (int i = arrayPath.size() - 1; i > 0; i--) {
-			if (arrayPath.get(i).equals(SRC)) {
-				indice = i;
-			}
-		}
-		List<String> arrayProjectPath = arrayPath.subList(0, indice);
-		String projectPath = String.join(File.separator, arrayProjectPath);
-		return projectPath;
-	}
-
-	private static String canonicalName(Classe c, String projectPath) {
-		return c.getClassPath().replace(SRC_TEST_JAVA, VAZIO).replace(SRC_MAIN_JAVA, VAZIO).replace(projectPath, VAZIO)
-				.replace(JAVA, VAZIO).replace(File.separator, PONTO);
-	}
-
 	public static void main(String[] args) {
 		try {
 			String rootPath = "/home/suporte/Documentos/java_projects/";
@@ -154,7 +132,7 @@ public class SpyClass {
 			List<String> excessoes = Arrays.asList("warlock2", "sojo", "JTwitter", "prjReborn", "head",
 					"picketbox-solder", "cometd", "chililog-server", "gisgraphy-mirror", "eXist-1.4.x", "netty",
 					"abiquo", "VT-Class-Scheduler", "classpath");
-			PrintWriter writer = new PrintWriter("projetos_selecionados.csv");
+			PrintWriter writer = new PrintWriter("projetos_selecionados_statistica_classes.csv");
 			if (root.isDirectory()) {
 				String[] projectList = root.list();
 				int i = 0;
@@ -167,9 +145,9 @@ public class SpyClass {
 					if (!spy.getResultado().getClassesList().isEmpty()) {
 						List<Classe> classes = spy.getResultado().getClassesList();
 						classes.forEach(c -> {
-							String projectPath = projectPath(c);
-							writer.write(
-									projectPath + "," + canonicalName(c, projectPath) + "," + c.getClassPath() + "\n");
+//							projetosSelecionados.add(new String[] {root.getPath() + File.separator + projeto, c.getClassName(), c.getClassPath()});
+							writer.write(root.getPath() + File.separator + projeto + "," + c.getClassName() + ","
+									+ c.getClassPath() + "\n");
 						});
 					}
 				}

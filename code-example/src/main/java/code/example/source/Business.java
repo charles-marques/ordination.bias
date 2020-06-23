@@ -20,7 +20,7 @@ public class Business {
 				return cliente1.getNome().compareTo(cliente2.getNome());
 			}
 		});
-		novosClientes = new ArrayList<>();
-		clientes.addAll(novosClientes);
+//		novosClientes = new ArrayList<>();
+//		clientes.addAll(novosClientes);
 	}
 }

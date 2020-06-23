@@ -1,0 +1,22 @@
+Estudo sobre código:
+1. Identificar todos os momentos, locais em que lista de pessoas
+ - Ferramentas
+2. Ferramenta que identificar pessoas
+   Dado um deperminado projeto, identificar qual(is) classe(s) repreta(m) pessoa no sistema.
+3. Ferramenta que identifica uso da coleção de pessoas é ordenada
+   Dado um conjunto de classes que representam pessoas, encontrar como essas pessoas são computados.
+   restrição: Java, OO -> todos.
+
+Obs1: Análise estática, porque o código é processado puro, sem executar diretamente o código fonte do projeto.
+Obs2: Analisar estrutura da árvore, comparação entre a execução e a árvore.
+Obs3: C que não é uma folha numa AST?
+      - Como se dá a diferenciação entre nó e folha.
+Obs4: Acessar o LLVM: verificar o que é execução simbólica.
+Obs5: Verificar ocorrências de ordenação no banco.
+Obs6: Adaptar ferramenta para identificar implementações (JPA) de framework de banco de dados que façam ordenação.
+Obs7: Criar uma tarefa no mecanical tork para a anotação para uso dos códigos.
+
+Passo a passo:
+1. Seg: Checagem do falso positivo.
+2. Ter: Arquivos de entrada e de saída.
+3. Qua

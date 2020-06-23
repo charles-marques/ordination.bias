@@ -1,0 +1,19 @@
+Dificuldades:
+  - identificar classes de interesse:
+    - classe(s) que representam pessoas.
+    - distinguir essa classe das demais como classe empresa.
+    - items:
+      - nomeação de entidades;
+      - nomeação dos atributos;
+      - atributos não padronizados;
+Módulo Spy:
+  - (Premissa) se existe uma classe de interesse, ela deve ter:
+    - nome de interesse: ["person", "employee", "customer", "client", "user", "pessoa", "empregado", "cliente", "usuario"]
+    - atributo de interesse: ["name", "nome", "nick","username","firstName"]
+       Obs: porque é sobre esse atributo que pode ocorrer viés.
+    - atributo de distinção: ["age", "sex", "birthday","password", "idade", "sexo", "nascimento","senha"]
+       Obs: sem esse segundo filtro classes que não são de interesse entram na lista.
+
+Questões em aberto:
+Parametrizar a classe de interesse - permitir que o usuário diga qual é a classe de interesse que ele deseja e como deveria ser feito o filtro.
+Extender para comparação de softwares: dado um conjuto de classes, quais são os softwares mais parecidos num repositório.

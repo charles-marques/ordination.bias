@@ -1,6 +1,8 @@
 package spyclass;
 
 public class Classe {
+	private static final String NAO = "Não";
+	private static final String SIM = "Sim";
 	private static final String COLUNM_SEPARATOR = "'; '";
 	private static final String ASPAS_SIMPLES = "'";
 	private String className;
@@ -40,7 +42,7 @@ public class Classe {
 	@Override
 	public String toString() {
 		return ASPAS_SIMPLES + className + COLUNM_SEPARATOR + classPath + COLUNM_SEPARATOR
-				+ (classRepresentative ? "Sim" : "Não") + ASPAS_SIMPLES;
+				+ (classRepresentative ? SIM : NAO) + ASPAS_SIMPLES;
 	}
 
 	@Override

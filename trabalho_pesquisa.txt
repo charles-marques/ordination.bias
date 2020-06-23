@@ -1,0 +1,18 @@
+Para sexta 19/06
+1. Ferramenta Spy:
+	1.1. rodar para todos os projetos
+	1.2. para todos os projetos que tem classe de interesse rodar o discovery.
+2. Ferramenta Discovery:
+	parametros:
+		projeto e arquivo de texto com a lista de classes: nome canonico.
+
+	saída:
+		csv:
+			projeto, classe_de_interesse, classe local ordenação, linha, escopo da variável.
+
+
+
+Repositórios: 14436
+Projetos Java: x
+Projetos com classes: y ["person", "employee", "customer", "client", "user", "pessoa", "empregado", "cliente", "usuario"]
+Projetos selecionados: z []

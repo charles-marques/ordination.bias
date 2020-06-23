@@ -9,16 +9,20 @@ import com.google.gson.Gson;
 
 public class Resultado {
 
-	private static final String FILE_NAME = "classes.csv";
-	private static final String FILE_COLUNMS = "class_name; class_path; class_representative;\n";
-	protected static List<Classe> classesList = new ArrayList<Classe>();
+	private final String FILE_NAME = "classes.csv";
+	private final String FILE_COLUNMS = "project_name, insterested_class_name, local_sorting_classe, line, variable_scope";
+	private List<Classe> classesList = new ArrayList<Classe>();
 
-	public static List<Classe> getClassesList() {
+	public Resultado() {
+		this.classesList = new ArrayList<Classe>();
+	}
+
+	public List<Classe> getClassesList() {
 		return classesList;
 	}
 
-	public static void setClassesList(List<Classe> classesList) {
-		Resultado.classesList = classesList;
+	public void setClassesList(List<Classe> classesList) {
+		this.classesList = classesList;
 	}
 
 	public void addClass(Classe classe) {
@@ -41,13 +45,11 @@ public class Resultado {
 
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
 		return super.equals(obj);
 	}
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
 		return super.hashCode();
 	}
 
